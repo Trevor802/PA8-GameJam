@@ -7,10 +7,12 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private Vector3 m_movingDir = Vector3.forward;
-	private CameraController m_camera = default;
 	private float m_movingSpeed = 10f;
+	[HideInInspector]
 	public UnityEvent OnTurnLeft;
+	[HideInInspector]
 	public UnityEvent OnTurnRight;
+	private CharacterController m_cc;
     private void Awake()
     {
 		if (OnTurnLeft is null){
@@ -21,6 +23,7 @@ public class PlayerController : MonoBehaviour
 		}
 		OnTurnLeft.RemoveAllListeners();
 		OnTurnRight.RemoveAllListeners();
+		m_cc = GetComponent<CharacterController>();
     }
 
     private void TurnLeft(){
@@ -41,6 +44,20 @@ public class PlayerController : MonoBehaviour
         else if(Input.GetKeyDown(KeyCode.D)){
             TurnRight();
         }
-        transform.position += m_movingDir * Time.deltaTime * m_movingSpeed;
+        var vel = m_movingDir * Time.deltaTime * m_movingSpeed;
+		if (Input.GetKeyDown(KeyCode.Space) && m_cc.isGrounded){
+			vel.y += Mathf.Sqrt(Physics.gravity.y * -3f);
+		}
+		vel += Physics.gravity * Time.deltaTime;
+		m_cc.Move(vel);
     }
+
+	// private void FixedUpdate() {
+	// 	RaycastHit hit;
+	// 	if (Physics.Raycast(transform.position, Vector3.down, out hit, 2f)){
+	// 		var pos = transform.position;
+	// 		pos.y = hit.point.y + GetComponent<CapsuleCollider>().bounds.extents.y / 2;
+	// 		transform.position = pos;
+	// 	}
+	// }
 }
