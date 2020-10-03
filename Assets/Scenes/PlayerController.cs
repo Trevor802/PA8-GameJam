@@ -62,6 +62,10 @@ public class PlayerController : MonoBehaviour
             mItemToPickup.OnPickup();
             Hud.CloseMessagePanel("");
         }
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            inventory.SwitchItem();
+        }
 
     }
 
@@ -89,8 +93,6 @@ public class PlayerController : MonoBehaviour
         if (item != null)
         {
             mItemToPickup = item;
-            //inventory.AddItem(item);
-           // item.OnPickup();
             Hud.OpenMessagePanel("");
         }
     }
@@ -101,7 +103,6 @@ public class PlayerController : MonoBehaviour
         {
             Hud.CloseMessagePanel("");
             mItemToPickup = null;
-            //inventory.AddItem(item);
         }
     }
 }

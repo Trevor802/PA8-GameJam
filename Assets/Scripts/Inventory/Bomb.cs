@@ -35,4 +35,11 @@ public class Bomb : MonoBehaviour, IInventoryItem
         Collider collider = gameObject.GetComponent<Collider>();
         collider.enabled = true;
     }
+
+    public void OnUse()
+    {
+        gameObject.SetActive(true);
+        Transform Hand = GameObject.Find("Hand").transform;
+        gameObject.transform.position = Hand.position; 
+    }
 }

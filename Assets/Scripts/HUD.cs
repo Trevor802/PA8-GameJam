@@ -13,6 +13,7 @@ public class HUD : MonoBehaviour
     {
         Inventory.ItemAdded+=InventoryScript_ItemAdded;
         Inventory.ItemUpdated += InventoryScript_ItemUpdated;
+        Inventory.ItemSwitched += InventoryScript_ItemSwitched;
     }
 
     private void InventoryScript_ItemAdded(object sender, InventoryEventArgs e)
@@ -38,12 +39,26 @@ public class HUD : MonoBehaviour
         Transform inventoryPanel = transform.Find("Inventory");
 
         //find image
-        Image image = inventoryPanel.GetChild(1).GetChild(0).GetComponent<Image>();
+        Image image = inventoryPanel.GetChild(0).GetChild(0).GetComponent<Image>();
 
+        Image image2 = inventoryPanel.GetChild(1).GetChild(0).GetComponent<Image>();
+
+        image2.sprite = image.sprite;
         image.sprite = e.Item.Image;
+        
             //todo: store a reference to the item
+    }
 
-      
+    private void InventoryScript_ItemSwitched(object sender, InventoryEventArgs e)
+    {
+        Transform inventoryPanel = transform.Find("Inventory");
+
+        //find image
+        Image image1 = inventoryPanel.GetChild(0).GetChild(0).GetComponent<Image>();
+        Image image2 = inventoryPanel.GetChild(1).GetChild(0).GetComponent<Image>();
+        Sprite tmp = image1.sprite;
+        image1.sprite = image2.sprite;
+        image2.sprite = tmp;
     }
 
     public void OpenMessagePanel(string text)

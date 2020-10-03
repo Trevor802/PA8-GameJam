@@ -15,16 +15,35 @@ public class Inventory : MonoBehaviour
     public void AddItem(IInventoryItem item)
     {
         //<slot
-        if(mItems.Count < SLOTS)
+        if (mItems.Count == 0)
         {
             Collider collider = (item as MonoBehaviour).GetComponent<Collider>();
             if (collider.enabled)
             {
                 collider.enabled = false;
                 mItems.Add(item);
+
                 item.OnPickup();
 
-                if(ItemAdded != null)
+                if (ItemAdded != null)
+                {
+                    ItemAdded(this, new InventoryEventArgs(item));
+                }
+            }
+        }
+        else if (mItems.Count == 1)
+        {
+            Collider collider = (item as MonoBehaviour).GetComponent<Collider>();
+            if (collider.enabled)
+            {
+                collider.enabled = false;
+
+                mItems.Add(mItems[0]);
+                mItems[0] = item;
+
+                item.OnPickup();
+
+                if (ItemAdded != null)
                 {
                     ItemAdded(this, new InventoryEventArgs(item));
                 }
@@ -32,13 +51,14 @@ public class Inventory : MonoBehaviour
         }
         else
         {
-            mItems[1].OnDrop();
-            mItems.RemoveAt(1);
+
             Collider collider = (item as MonoBehaviour).GetComponent<Collider>();
             if (collider.enabled)
             {
+                mItems[1].OnDrop();
+                mItems[1] = mItems[0];
                 collider.enabled = false;
-                mItems.Add(item);
+                mItems[0] = item;
                 item.OnPickup();
 
                 if (ItemUpdated != null)

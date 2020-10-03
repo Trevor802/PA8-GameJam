@@ -36,4 +36,9 @@ public class Knife : MonoBehaviour, IInventoryItem
         Collider collider = gameObject.GetComponent<Collider>();
         collider.enabled = true;
     }
+
+    public void OnUse()
+    {
+
+    }
 }
