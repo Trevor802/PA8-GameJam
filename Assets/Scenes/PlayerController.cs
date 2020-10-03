@@ -6,8 +6,12 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+	public Inventory inventory;
+    public HUD Hud;
+    private IInventoryItem mItemToPickup = null;
+
     private Vector3 m_movingDir = Vector3.forward;
-	private float m_movingSpeed = 10f;
+	private float m_movingSpeed = 1f;
 	[HideInInspector]
 	public UnityEvent OnTurnLeft;
 	[HideInInspector]
@@ -50,14 +54,54 @@ public class PlayerController : MonoBehaviour
 		}
 		vel += Physics.gravity * Time.deltaTime;
 		m_cc.Move(vel);
+
+        
+        if (Input.GetKeyDown(KeyCode.F) && mItemToPickup != null)
+        {
+            inventory.AddItem(mItemToPickup);
+            mItemToPickup.OnPickup();
+            Hud.CloseMessagePanel("");
+        }
+
     }
 
-	// private void FixedUpdate() {
-	// 	RaycastHit hit;
-	// 	if (Physics.Raycast(transform.position, Vector3.down, out hit, 2f)){
-	// 		var pos = transform.position;
-	// 		pos.y = hit.point.y + GetComponent<CapsuleCollider>().bounds.extents.y / 2;
-	// 		transform.position = pos;
-	// 	}
-	// }
+    // private void FixedUpdate() {
+    // 	RaycastHit hit;
+    // 	if (Physics.Raycast(transform.position, Vector3.down, out hit, 2f)){
+    // 		var pos = transform.position;
+    // 		pos.y = hit.point.y + GetComponent<CapsuleCollider>().bounds.extents.y / 2;
+    // 		transform.position = pos;
+    // 	}
+    // }
+
+
+    //private void OnControllerColliderHit(ControllerColliderHit hit)
+    //{
+    //    IInventoryItem item = hit.collider.GetComponent<IInventoryItem>();
+    //    if(item != null)
+    //    {
+    //        inventory.AddItem(item);
+    //    }
+    //}
+    private void OnTriggerEnter(Collider other)
+    {
+        IInventoryItem item = other.GetComponent<IInventoryItem>();
+        if (item != null)
+        {
+            mItemToPickup = item;
+            //inventory.AddItem(item);
+           // item.OnPickup();
+            Hud.OpenMessagePanel("");
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        IInventoryItem item = other.GetComponent<IInventoryItem>();
+        if (item != null)
+        {
+            Hud.CloseMessagePanel("");
+            mItemToPickup = null;
+            //inventory.AddItem(item);
+        }
+    }
 }
