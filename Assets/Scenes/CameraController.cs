@@ -6,12 +6,17 @@ public class CameraController : MonoBehaviour
 {
 	private InterruptibleCoroutine m_camRotCoroutine = default;
 	private float m_rotationSec = 0.5f;
-    void Start()
+    void Awake()
     {
         var player = GetComponentInParent<PlayerController>();
         player.OnTurnLeft.AddListener(OnTurnLeft);
         player.OnTurnRight.AddListener(OnTurnRight);
+		player.OnResetDirection += OnResetCamera;
     }
+
+	private void OnResetCamera(Transform transform){
+		transform.rotation = Quaternion.LookRotation(transform.forward);
+	}
 
     private void OnTurnLeft(){
         var prevTargetRot = m_camRotCoroutine.StopCoroutine(this, false);

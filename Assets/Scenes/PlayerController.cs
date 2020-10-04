@@ -11,12 +11,16 @@ public class PlayerController : MonoBehaviour
     private IInventoryItem mItemToPickup = null;
 
     private Vector3 m_movingDir = Vector3.forward;
+	[SerializeField]
 	private float m_movingSpeed = 10f;
 	[HideInInspector]
 	public UnityEvent OnTurnLeft;
 	[HideInInspector]
 	public UnityEvent OnTurnRight;
+	[HideInInspector]
+	public UnityAction<Transform> OnResetDirection;
 	private CharacterController m_cc;
+	[SerializeField]
 	private float m_jumpHeight = 2f;
 	private float m_verticalSpeed;
     private void Awake()
@@ -30,7 +34,13 @@ public class PlayerController : MonoBehaviour
 		OnTurnLeft.RemoveAllListeners();
 		OnTurnRight.RemoveAllListeners();
 		m_cc = GetComponent<CharacterController>();
+		ResetDirection();
     }
+
+	private void ResetDirection(){
+		m_movingDir = transform.forward;
+		OnResetDirection?.Invoke(transform);
+	}
 
     private void TurnLeft(){
 		m_movingDir = m_movingDir.TurnLeft();
