@@ -11,12 +11,14 @@ public class PlayerController : MonoBehaviour
     private IInventoryItem mItemToPickup = null;
 
     private Vector3 m_movingDir = Vector3.forward;
-	private float m_movingSpeed = 1f;
+	private float m_movingSpeed = 10f;
 	[HideInInspector]
 	public UnityEvent OnTurnLeft;
 	[HideInInspector]
 	public UnityEvent OnTurnRight;
 	private CharacterController m_cc;
+	private float m_jumpHeight = 2f;
+	private float m_verticalSpeed;
     private void Awake()
     {
 		if (OnTurnLeft is null){
@@ -48,12 +50,16 @@ public class PlayerController : MonoBehaviour
         else if(Input.GetKeyDown(KeyCode.D)){
             TurnRight();
         }
-        var vel = m_movingDir * Time.deltaTime * m_movingSpeed;
-		if (Input.GetKeyDown(KeyCode.Space) && m_cc.isGrounded){
-			vel.y += Mathf.Sqrt(Physics.gravity.y * -3f);
-		}
-		vel += Physics.gravity * Time.deltaTime;
-		m_cc.Move(vel);
+		// Movement
+        {
+			var vel = m_movingDir * Time.deltaTime * m_movingSpeed;
+			if (Input.GetKeyDown(KeyCode.Space) && m_cc.isGrounded){
+				m_verticalSpeed = Mathf.Sqrt(2 * Mathf.Abs(Physics.gravity.y) * m_jumpHeight);
+			}
+			m_verticalSpeed += Physics.gravity.y * Time.deltaTime;
+			vel.y = m_verticalSpeed * Time.deltaTime;
+			m_cc.Move(vel);
+        }
 
         
         if (Input.GetKeyDown(KeyCode.F) && mItemToPickup != null)
