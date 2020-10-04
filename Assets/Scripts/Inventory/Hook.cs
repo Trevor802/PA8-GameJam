@@ -21,6 +21,15 @@ public class Hook : MonoBehaviour, IInventoryItem
         }
     }
 
+    public bool _IsUsed = false;
+    public bool IsUsed
+    {
+        get
+        {
+            return _IsUsed;
+        }
+    }
+
     public void OnPickup()
     {
         //TODO : add logic what happens when hook is picked up by player
@@ -39,6 +48,10 @@ public class Hook : MonoBehaviour, IInventoryItem
 
     public void OnUse()
     {
-
+        if (!IsUsed)
+        {
+            _IsUsed = true;
+            gameObject.SetActive(false);
+        }
     }
 }

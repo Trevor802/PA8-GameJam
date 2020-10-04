@@ -13,6 +13,7 @@ public class HUD : MonoBehaviour
     {
         Inventory.ItemAdded+=InventoryScript_ItemAdded;
         Inventory.ItemUpdated += InventoryScript_ItemUpdated;
+        Inventory.ItemRemoved += InventoryScript_ItemRemoved;
         Inventory.ItemSwitched += InventoryScript_ItemSwitched;
     }
 
@@ -37,10 +38,10 @@ public class HUD : MonoBehaviour
     private void InventoryScript_ItemUpdated(object sender, InventoryEventArgs e)
     {
         Transform inventoryPanel = transform.Find("Inventory");
-
+        
         //find image
         Image image = inventoryPanel.GetChild(0).GetChild(0).GetComponent<Image>();
-
+        
         Image image2 = inventoryPanel.GetChild(1).GetChild(0).GetComponent<Image>();
 
         image2.sprite = image.sprite;
@@ -59,6 +60,34 @@ public class HUD : MonoBehaviour
         Sprite tmp = image1.sprite;
         image1.sprite = image2.sprite;
         image2.sprite = tmp;
+    }
+
+    private void InventoryScript_ItemRemoved(object sender, InventoryEventArgs e)
+    {
+        Transform inventoryPanel = transform.Find("Inventory");
+        //find image
+        Image image1 = inventoryPanel.GetChild(0).GetChild(0).GetComponent<Image>();
+        Image image2 = inventoryPanel.GetChild(1).GetChild(0).GetComponent<Image>();
+        if(image1.sprite == e.Item.Image)
+        {
+            if(image2.sprite!= null)
+            {
+                image1.sprite = image2.sprite;
+                image2.sprite = null;
+                image2.enabled = false;
+            }
+            else
+            {
+                image1.sprite = null;
+                image1.enabled = false;
+            }
+     
+        }
+        if(image2.sprite == e.Item.Image)
+        {
+            image2.sprite = null;
+            image2.enabled = false;
+        }
     }
 
     public void OpenMessagePanel(string text)
