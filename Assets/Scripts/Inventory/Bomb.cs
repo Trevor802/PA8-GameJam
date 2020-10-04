@@ -21,6 +21,14 @@ public class Bomb : MonoBehaviour, IInventoryItem
         }
     }
 
+    public bool _IsUsed = false;
+    public bool IsUsed
+    {
+        get
+        {
+            return _IsUsed;
+        }
+    }
     public void OnPickup()
     {
         //TODO : add logic what happens when hook is picked up by player
@@ -38,8 +46,10 @@ public class Bomb : MonoBehaviour, IInventoryItem
 
     public void OnUse()
     {
-        gameObject.SetActive(true);
-        Transform Hand = GameObject.Find("Hand").transform;
-        gameObject.transform.position = Hand.position; 
+        if (!IsUsed)
+        {
+            _IsUsed = true;
+            gameObject.SetActive(false);
+        }
     }
 }

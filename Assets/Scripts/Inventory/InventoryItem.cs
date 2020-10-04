@@ -9,6 +9,8 @@ public interface IInventoryItem
 
     Sprite Image { get; }
 
+    bool IsUsed { get; }
+
     void OnPickup();
 
     void OnDrop();

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -84,6 +85,21 @@ public class Inventory : MonoBehaviour
             }
         }
         
+    }
+
+    public bool HasItem(string name)
+    {
+        foreach(IInventoryItem item in mItems)
+        {
+            if(item.Name == name)
+            {
+                item.OnUse();
+                mItems.Remove(item);
+                ItemRemoved(this, new InventoryEventArgs(item));
+                return true;
+            }
+        }
+        return false;
     }
     
 }

@@ -205,12 +205,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1180b219639d04f93a1ba685303d6aea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inventory: {fileID: 0}
+  Hud: {fileID: 7581819983126278075, guid: df03524277ac2e74e8514c3a16ea8f4e, type: 3}
+  m_movingSpeed: 10
   OnTurnLeft:
     m_PersistentCalls:
       m_Calls: []
   OnTurnRight:
     m_PersistentCalls:
       m_Calls: []
+  m_jumpHeight: 2
 --- !u!143 &1771803051
 CharacterController:
   m_ObjectHideFlags: 0
