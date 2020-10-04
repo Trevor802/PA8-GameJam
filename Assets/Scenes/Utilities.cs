@@ -45,31 +45,32 @@ public static class Utilities
         return result;
     }
 
-    public static IEnumerator Turn(this GameObject obj, Quaternion targetRot, InterruptibleCoroutine.Callback callback = null, float rotationSec = 0.1f){
+    public static IEnumerator Turn(this GameObject obj, Quaternion targetRot, Action callback = null, float rotationSec = 0.1f){
 		while(Quaternion.Angle(obj.transform.rotation, targetRot) > 1f){
 			float deltaAngle = 90f / rotationSec * Time.deltaTime;
 			obj.transform.rotation = Quaternion.RotateTowards(obj.transform.rotation, targetRot, deltaAngle);
 			yield return null;
 		}
-        if (callback != null){
-            callback(true);
-        }
+        obj.transform.rotation = targetRot;
+        callback();
     }
-
-    public static InterruptibleCoroutine WrapAction(this Coroutine self, InterruptibleCoroutine.Callback action){
+    public static bool FastApproximately(float a, float b, float threshold)
+    {
+        return ((a - b) < 0 ? ((a - b) * -1) : (a - b)) <= threshold;
+    }
+    public static InterruptibleCoroutine WrapAction(this Coroutine self, Action action){
         return new InterruptibleCoroutine{coroutine = self, callback = action};
     }
 
-    public static object StopCoroutine(this InterruptibleCoroutine self, MonoBehaviour mono, bool execute = true){
-        if (self is null){
-            return null;
+    public static void StopCoroutine(this InterruptibleCoroutine self, MonoBehaviour mono){
+        if (self is null || self.coroutine is null){
+            return;
         }
         mono.StopCoroutine(self.coroutine);
-        return self.callback(execute);
+        self.callback();
     }
 }
 public class InterruptibleCoroutine{
     public Coroutine coroutine {get;set;} = default;
-    public delegate object Callback(bool execute);
-    public Callback callback;
+    public Action callback;
 }

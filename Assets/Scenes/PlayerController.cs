@@ -11,45 +11,53 @@ public class PlayerController : MonoBehaviour
     private IInventoryItem mItemToPickup = null;
 
     private Vector3 m_movingDir = Vector3.forward;
+    private Vector3 m_gravityDir = Vector3.down;
 	[SerializeField]
 	private float m_movingSpeed = 10f;
 	[HideInInspector]
-	public UnityEvent OnTurnLeft;
+	public UnityAction<Vector3> OnTurnLeft;
 	[HideInInspector]
-	public UnityEvent OnTurnRight;
+	public UnityAction<Vector3> OnTurnRight;
 	[HideInInspector]
-	public UnityAction<Transform> OnResetDirection;
-	private CharacterController m_cc;
+	public UnityAction<Vector3> OnResetDirection;
 	[SerializeField]
 	private float m_jumpHeight = 2f;
 	private float m_verticalSpeed;
+    private float m_gravityValue = 20f;
+    private bool isGrounded{get; set;} = false;
+    private float m_turnCooldown = 0.5f;
+    private bool m_canTurn = true;
     private void Awake()
     {
-		if (OnTurnLeft is null){
-			OnTurnLeft = new UnityEvent();
-		}
-		if (OnTurnRight is null){
-			OnTurnRight = new UnityEvent();
-		}
-		OnTurnLeft.RemoveAllListeners();
-		OnTurnRight.RemoveAllListeners();
-		m_cc = GetComponent<CharacterController>();
 		ResetDirection();
     }
 
 	private void ResetDirection(){
 		m_movingDir = transform.forward;
-		OnResetDirection?.Invoke(transform);
 	}
 
     private void TurnLeft(){
-		m_movingDir = m_movingDir.TurnLeft();
-		OnTurnLeft.Invoke();
+        if (!m_canTurn){
+            return;
+        }
+        m_canTurn = false;
+        Invoke("RefreshTurnCooldown", m_turnCooldown);
+		m_movingDir = Vector3.Cross(m_movingDir, transform.up);
+		OnTurnLeft?.Invoke(m_movingDir);
     }
 
     private void TurnRight(){
-		m_movingDir = m_movingDir.TurnRight();
-		OnTurnRight.Invoke();
+        if (!m_canTurn){
+            return;
+        }
+        m_canTurn = false;
+        Invoke("RefreshTurnCooldown", m_turnCooldown);
+		m_movingDir = Vector3.Cross(transform.up, m_movingDir);
+		OnTurnRight?.Invoke(m_movingDir);
+    }
+
+    private void RefreshTurnCooldown(){
+        m_canTurn = true;
     }
 
     void Update()
@@ -62,15 +70,22 @@ public class PlayerController : MonoBehaviour
         }
 		// Movement
         {
-			var vel = m_movingDir * Time.deltaTime * m_movingSpeed;
-			if (Input.GetKeyDown(KeyCode.Space) && m_cc.isGrounded){
-				m_verticalSpeed = Mathf.Sqrt(2 * Mathf.Abs(Physics.gravity.y) * m_jumpHeight);
-			}
-			m_verticalSpeed += Physics.gravity.y * Time.deltaTime;
-			vel.y = m_verticalSpeed * Time.deltaTime;
-			m_cc.Move(vel);
+			var vel = m_movingDir * m_movingSpeed;
+            // m_verticalSpeed = Vector3.Dot(GetComponent<Rigidbody>().velocity, transform.up);
+            if (!isGrounded){
+			    m_verticalSpeed -= m_gravityValue * Time.deltaTime;
+            }
+            else{
+                if (Input.GetKeyDown(KeyCode.Space)){
+                    m_verticalSpeed = Mathf.Sqrt(2 * m_gravityValue * m_jumpHeight);
+                }
+                else if (m_verticalSpeed < 0){
+                    m_verticalSpeed = 0;
+                }
+            }
+            vel += transform.up * m_verticalSpeed;
+			Move(vel);
         }
-
         
         if (Input.GetKeyDown(KeyCode.F) && mItemToPickup != null)
         {
@@ -82,18 +97,76 @@ public class PlayerController : MonoBehaviour
         {
             inventory.SwitchItem();
         }
-
+        Debug.DrawLine(transform.position, transform.position + m_movingDir * 10f, Color.red);
     }
 
-    // private void FixedUpdate() {
-    // 	RaycastHit hit;
-    // 	if (Physics.Raycast(transform.position, Vector3.down, out hit, 2f)){
-    // 		var pos = transform.position;
-    // 		pos.y = hit.point.y + GetComponent<CapsuleCollider>().bounds.extents.y / 2;
-    // 		transform.position = pos;
-    // 	}
-    // }
+    private void Move(Vector3 velocity){
+        GetComponent<Rigidbody>().velocity = velocity;
+    }
 
+    private bool CheckGround(Vector3 origin, out RaycastHit hit, float extraDepth = 0.5f){
+        var dist = GetComponent<CapsuleCollider>().height / 2f + extraDepth;
+        var result = Physics.Raycast(origin, -transform.up, out hit, dist);
+        return result;
+    }
+
+    private void SlopeDetection(){
+        RaycastHit frontHit;
+        var _1 = transform.position + m_movingDir * Time.deltaTime;
+        var frontResult = CheckGround(_1, out frontHit);
+        RaycastHit centerHit;
+        var centerResult = CheckGround(transform.position, out centerHit);
+        // if (frontResult && centerResult && frontHit.normal == centerHit.normal){
+        //     var _3 = Vector3.Dot(transform.up, frontHit.normal);
+        //     if (!Utilities.FastApproximately(_3, 1, 0.01f)){
+        //         RotationAlignToGround(frontHit.normal);
+        //     }
+        // }
+        if (frontResult){
+            var groundNormal = frontHit.normal;
+            var _2 = Vector3.Dot(m_movingDir, groundNormal);
+            // Floor
+            if (Utilities.FastApproximately(_2, 0, 0.01f)){
+                return;
+            }
+            // Incoming Upslope
+            else if (_2 < 0){
+                // TODO: 1 frame freeze
+                if (_2 < -0.7)
+                    VelocityAlignToGround(groundNormal);
+                else
+                    RotationAlignToGround(groundNormal);
+            }
+            // Incoming Downslope
+            else if(_2 > 0){
+                // TODO: Need attach
+                if (_2 > 0.7)
+                    VelocityAlignToGround(groundNormal);
+                else
+                    RotationAlignToGround(groundNormal);
+            }
+        }
+    }
+
+    private void VelocityAlignToGround(Vector3 floorNormal){
+        var newDir = Vector3.ProjectOnPlane(m_movingDir, floorNormal);
+        m_movingDir = newDir.normalized;
+    }
+    private void RotationAlignToGround(Vector3 floorNormal){
+        var newDir = Vector3.ProjectOnPlane(m_movingDir, floorNormal);
+        m_movingDir = newDir.normalized;
+        transform.rotation = Quaternion.LookRotation(m_movingDir, floorNormal);
+        OnResetDirection(m_movingDir);
+    }
+
+    private Vector3 GetFrontPoint() => transform.position + 
+        Vector3.ProjectOnPlane(m_movingDir, transform.up).normalized * GetComponent<CapsuleCollider>().radius;
+
+    private void FixedUpdate() {
+        RaycastHit hit;
+        isGrounded = CheckGround(transform.position, out hit, 0.1f) || CheckGround(GetFrontPoint(), out hit, 0.1f);
+        SlopeDetection();
+    }
 
     //private void OnControllerColliderHit(ControllerColliderHit hit)
     //{

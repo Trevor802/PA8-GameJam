@@ -1,47 +1,42 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
 	private InterruptibleCoroutine m_camRotCoroutine = default;
-	private float m_rotationSec = 0.5f;
+	private float m_rotationSec = 0.2f;
+	private bool m_rotating = false;
     void Awake()
     {
         var player = GetComponentInParent<PlayerController>();
-        player.OnTurnLeft.AddListener(OnTurnLeft);
-        player.OnTurnRight.AddListener(OnTurnRight);
+        player.OnTurnLeft += OnTurnLeft;
+        player.OnTurnRight += OnTurnRight;
 		player.OnResetDirection += OnResetCamera;
     }
 
-	private void OnResetCamera(Transform transform){
-		transform.rotation = Quaternion.LookRotation(transform.forward);
+	private void OnResetCamera(Vector3 forward){
+		transform.rotation = Quaternion.LookRotation(forward, transform.up);
 	}
 
-    private void OnTurnLeft(){
-        var prevTargetRot = m_camRotCoroutine.StopCoroutine(this, false);
-		var targetRot = prevTargetRot is null ? Quaternion.LookRotation(-transform.right) :
-			(Quaternion)prevTargetRot * Quaternion.Euler(0, -90f, 0);
-		InterruptibleCoroutine.Callback afterRot = (bool execute) => {
-			if (execute){
-				transform.rotation = targetRot;
-			}
-			return targetRot;
+    private void OnTurnLeft(Vector3 forward){
+		m_camRotCoroutine.StopCoroutine(this);
+		var targetRot = Quaternion.LookRotation(forward, transform.up); 
+		Action afterRot = () => {
+			m_rotating = false;
 		};
+		m_rotating = true;
 		m_camRotCoroutine = StartCoroutine(gameObject.Turn(targetRot, afterRot, m_rotationSec)).WrapAction(afterRot);
 
     }
 
-	private void OnTurnRight(){
-		var prevTargetRot = m_camRotCoroutine.StopCoroutine(this, false);
-		var targetRot = prevTargetRot is null ? Quaternion.LookRotation(transform.right) :
-			(Quaternion)prevTargetRot * Quaternion.Euler(0, 90f, 0);
-		InterruptibleCoroutine.Callback afterRot = (bool execute) => {
-			if (execute){
-				transform.rotation = targetRot;
-			}
-			return targetRot;
+	private void OnTurnRight(Vector3 forward){
+		var targetRot = Quaternion.LookRotation(forward, transform.up);
+		Action afterRot = () => {
+			m_rotating = false;
 		};
+		m_rotating = true;
 		m_camRotCoroutine = StartCoroutine(gameObject.Turn(targetRot, afterRot, m_rotationSec)).WrapAction(afterRot);
 	}
 }
