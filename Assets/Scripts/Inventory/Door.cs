@@ -5,10 +5,29 @@ using UnityEngine;
 public class Door : MonoBehaviour
 {
     public Inventory inventory;
+    bool CollideWithPlayer = false;
 
     private void OnTriggerEnter(Collider other)
     {
+        
         if (other.gameObject.name == "Player")
+        {
+            CollideWithPlayer = true;
+
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.name == "Player")
+        {
+            CollideWithPlayer = false;
+        }
+    }
+
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.F) && CollideWithPlayer)
         {
             if (inventory.HasItem("Bomb"))
             {
