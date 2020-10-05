@@ -15,8 +15,9 @@ public class MonsterMovement : MonoBehaviour
     public float interval = 0.5f;
     public float monsterDelay = 3f;
     private float timer = 0f;
+    private float startTimer = 0f;
 
-    private List<Transform> playerTraceBuffer = new List<Transform>(30);
+    private List<Vector3> playerTraceBuffer = new List<Vector3>(1000);
     private int bufferIndex = 0;
     private int followIndex = 0;
 
@@ -32,32 +33,45 @@ public class MonsterMovement : MonoBehaviour
     private void FixedUpdate()
     {
         timer += Time.deltaTime;
-        if(!monsterStart && timer >= monsterDelay)
+        if (!monsterStart)
+            startTimer += Time.deltaTime;
+
+        if(!monsterStart && startTimer >= monsterDelay)
         {
             monsterStart = true;
             Debug.Log("Monster starts");
         }
 
+        MarkPlayerTransform();
         if (monsterStart)
         {
-            MarkPlayerTransform();
             FollowPlayerTrace();
+            
         }
         // Follow up 
     }
 
+    
+
     private void FollowPlayerTrace()
     {
-        if (followIndex >= 30)
+        if (followIndex >= 1000)
             followIndex = 0;
 
-        Vector3 direction = (playerTraceBuffer[followIndex].position - transform.position).normalized;
+        Vector3 direction = (playerTraceBuffer[followIndex] - transform.position).normalized;
         transform.Translate(direction * Time.deltaTime * speed);
 
-        if(Vector3.Distance(transform.position, playerTraceBuffer[followIndex].position) <= 1f)
+        float dis = Vector3.Distance(transform.position, playerTraceBuffer[followIndex]);
+        //Debug.Log(dis);
+        if (dis <= 0.5f)
         {
             followIndex++;
         }
+    }
+
+    private void NavigateToPlayer()
+    {
+
     }
 
     private void MarkPlayerTransform()
@@ -67,20 +81,22 @@ public class MonsterMovement : MonoBehaviour
         {
             if (timer >= interval)
             {
-                playerTraceBuffer.Add(player.transform);
-                Debug.Log(playerTraceBuffer.Count);
+                Vector3 temp = new Vector3(player.transform.position.x, player.transform.position.y, player.transform.position.z);
+                playerTraceBuffer.Add(temp);
+                //Debug.Log(playerTraceBuffer.Count);
                 timer = 0;
             }
             
         }
         else
         {
-            if (bufferIndex >= 30)
+            if (bufferIndex >= 1000)
                 bufferIndex = 0;
 
             if (timer >= interval)
             {
-                playerTraceBuffer[bufferIndex] = player.transform;
+                Vector3 temp = new Vector3(player.transform.position.x, player.transform.position.y, player.transform.position.z);
+                playerTraceBuffer[bufferIndex] = temp;
                 bufferIndex++;
                 timer = 0;
             }
