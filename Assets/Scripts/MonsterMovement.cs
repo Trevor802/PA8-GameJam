@@ -89,11 +89,6 @@ public class MonsterMovement : MonoBehaviour
         }
     }
 
-    private void NavigateToPlayer()
-    {
-
-    }
-
     private void MarkPlayerTransform()
     {
         // Mark player's transform data
