@@ -58,7 +58,7 @@ public class Inventory : MonoBehaviour
             {
                 mItems[1].OnDrop();
                 mItems[1] = mItems[0];
-                collider.enabled = false;
+                //collider.enabled = false;
                 mItems[0] = item;
                 item.OnPickup();
 
@@ -101,5 +101,4 @@ public class Inventory : MonoBehaviour
         }
         return false;
     }
-    
 }
