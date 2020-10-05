@@ -162,9 +162,14 @@ public class PlayerController : MonoBehaviour
     private Vector3 GetFrontPoint() => transform.position + 
         Vector3.ProjectOnPlane(m_movingDir, transform.up).normalized * GetComponent<CapsuleCollider>().radius;
 
+    private Vector3 GetBackPoint() => transform.position + 
+        Vector3.ProjectOnPlane(-m_movingDir, transform.up).normalized * GetComponent<CapsuleCollider>().radius;
+
     private void FixedUpdate() {
         RaycastHit hit;
-        isGrounded = CheckGround(transform.position, out hit, 0.1f) || CheckGround(GetFrontPoint(), out hit, 0.1f);
+        isGrounded = CheckGround(transform.position, out hit, 0.1f) 
+            || CheckGround(GetFrontPoint(), out hit, 0.1f)
+            || CheckGround(GetBackPoint(), out hit, 0.1f);
         SlopeDetection();
     }
 
