@@ -33,6 +33,10 @@ public class PlayerController : MonoBehaviour
 		ResetDirection();
     }
 
+    private void Start() {
+        AudioManager.Instance.PlayMusic();
+    }
+
 	public void ResetDirection(){
 		m_movingDir = transform.forward;
 	}
