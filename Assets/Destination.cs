@@ -19,10 +19,16 @@ public class Destination : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            if (other.gameObject.transform.right == transform.right)
+            if (other.gameObject.transform.right == transform.right){
                 PlayerWin();
+                Invoke("HideText", 2f);
+            }
 
         }
+    }
+
+    private void HideText(){
+        winText.enabled = false;
     }
 
     private void PlayerWin()
