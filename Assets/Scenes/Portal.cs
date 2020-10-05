@@ -5,22 +5,45 @@ using UnityEngine;
 
 public class Portal : MonoBehaviour
 {
+    public Inventory inventory;
     public bool LoadLevel = false;
     public string LevelName;
     private bool m_canUse = true;
     private float m_portalCooldown = 1f;
     public Portal Exit;
     private void OnTriggerEnter(Collider other) {
-        if (!m_canUse)
-            return;
-        if (LoadLevel){
-            SceneManager.LoadScene(LevelName);
-            return;
+        //if (!m_canUse)
+        //    return;
+        //if (LoadLevel)
+        //{
+        //    SceneManager.LoadScene(LevelName);
+        //    return;
+        //}
+        //var player = other.GetComponent<PlayerController>();
+        //if (player != null)
+        //{
+        //    Exit.Out(player);
+        //}
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (Input.GetKeyDown(KeyCode.F) && inventory.HasItem("Hook"))
+        {
+            if (!m_canUse)
+                return;
+            if (LoadLevel)
+            {
+                SceneManager.LoadScene(LevelName);
+                return;
+            }
+            var player = other.GetComponent<PlayerController>();
+            if (player != null)
+            {
+                Exit.Out(player);
+            }
         }
-        var player = other.GetComponent<PlayerController>();
-        if (player != null){
-            Exit.Out(player);
-        }
+
     }
 
     private void Out(PlayerController player){
@@ -33,4 +56,5 @@ public class Portal : MonoBehaviour
     }
 
     private void ResetPortal() => m_canUse = true;
+
 }
