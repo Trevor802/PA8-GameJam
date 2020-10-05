@@ -7,6 +7,7 @@ public class Portal : MonoBehaviour
 {
     public bool LoadLevel = false;
     public string LevelName;
+    public GameObject ExitPoint;
     private bool m_canUse = true;
     private float m_portalCooldown = 1f;
     public Portal Exit;
@@ -25,8 +26,8 @@ public class Portal : MonoBehaviour
 
     private void Out(PlayerController player){
         m_canUse = false;
-        player.transform.position = transform.position;
-        player.transform.rotation = transform.rotation;
+        player.transform.position = ExitPoint.transform.position;
+        player.transform.rotation = ExitPoint.transform.rotation;
         player.ResetDirection();
         player.OnResetDirection(player.MovingDir);
         Invoke("ResetPortal", m_portalCooldown);
