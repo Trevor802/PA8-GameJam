@@ -4,7 +4,12 @@ using UnityEngine;
 
 public class Destination : MonoBehaviour
 {
-    
+    private void Start()
+    {
+        GetComponent<MeshRenderer>().enabled = false;
+    }
+
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))
