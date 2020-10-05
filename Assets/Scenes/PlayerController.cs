@@ -27,7 +27,7 @@ public class PlayerController : MonoBehaviour
     private float m_gravityValue = 20f;
     private bool isGrounded{get; set;} = false;
     private float m_turnCooldown = 0.5f;
-    private bool m_canTurn = true;
+    public bool canTurn{get; set;} = false;
     private void Awake()
     {
 		ResetDirection();
@@ -38,27 +38,19 @@ public class PlayerController : MonoBehaviour
 	}
 
     private void TurnLeft(){
-        if (!m_canTurn){
+        if (!canTurn){
             return;
         }
-        m_canTurn = false;
-        Invoke("RefreshTurnCooldown", m_turnCooldown);
 		m_movingDir = Vector3.Cross(m_movingDir, transform.up);
 		OnTurnLeft?.Invoke(m_movingDir);
     }
 
     private void TurnRight(){
-        if (!m_canTurn){
+        if (!canTurn){
             return;
         }
-        m_canTurn = false;
-        Invoke("RefreshTurnCooldown", m_turnCooldown);
 		m_movingDir = Vector3.Cross(transform.up, m_movingDir);
 		OnTurnRight?.Invoke(m_movingDir);
-    }
-
-    private void RefreshTurnCooldown(){
-        m_canTurn = true;
     }
 
     void Update()
@@ -68,6 +60,9 @@ public class PlayerController : MonoBehaviour
         }
         else if(Input.GetKeyDown(KeyCode.D)){
             TurnRight();
+        }
+        else if (Input.GetKeyDown(KeyCode.R)){
+            UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
         }
 		// Movement
         {
