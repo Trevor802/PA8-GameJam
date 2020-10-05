@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 struct PlayerTrace
 {
@@ -17,7 +18,7 @@ public class MonsterMovement : MonoBehaviour
     private float timer = 0f;
     private float startTimer = 0f;
 
-    private List<Vector3> playerTraceBuffer = new List<Vector3>(1000);
+    private List<Vector3> playerTraceBuffer = new List<Vector3>(30);
     private int bufferIndex = 0;
     private int followIndex = 0;
 
@@ -46,16 +47,22 @@ public class MonsterMovement : MonoBehaviour
         if (monsterStart)
         {
             FollowPlayerTrace();
-            
+            if (Vector3.Distance(transform.position, player.transform.position) <= 1f)
+                PlayerFail();
+                //Debug.Log("Player caught");
         }
         // Follow up 
     }
 
-    
+    private void PlayerFail()
+    {
+        Scene currentScene = SceneManager.GetActiveScene();
+        SceneManager.LoadScene(currentScene.name);
+    }
 
     private void FollowPlayerTrace()
     {
-        if (followIndex >= 1000)
+        if (followIndex >= 30)
             followIndex = 0;
 
         Vector3 direction = (playerTraceBuffer[followIndex] - transform.position).normalized;
@@ -90,7 +97,7 @@ public class MonsterMovement : MonoBehaviour
         }
         else
         {
-            if (bufferIndex >= 1000)
+            if (bufferIndex >= 30)
                 bufferIndex = 0;
 
             if (timer >= interval)
