@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -15,6 +16,8 @@ public class MonsterMovement : MonoBehaviour
     public float speed = 10f;
     public float interval = 0.5f;
     public float monsterDelay = 3f;
+    public AudioClip monsterSFX;
+
     private float timer = 0f;
     private float startTimer = 0f;
 
@@ -28,7 +31,11 @@ public class MonsterMovement : MonoBehaviour
         if (player == null)
             throw new System.Exception("Player is not set.");
 
-        
+        if (AudioManager.Instance == null)
+            throw new System.Exception("Audio manager is not instantiated.");
+
+        if(monsterSFX == null)
+            throw new System.Exception("Monster SFX is not set.");
     }
 
     private void FixedUpdate()
@@ -40,6 +47,7 @@ public class MonsterMovement : MonoBehaviour
         if(!monsterStart && startTimer >= monsterDelay)
         {
             monsterStart = true;
+            AudioManager.Instance.PlaySound(monsterSFX);
             Debug.Log("Monster starts");
         }
 
@@ -47,15 +55,20 @@ public class MonsterMovement : MonoBehaviour
         if (monsterStart)
         {
             FollowPlayerTrace();
-            if (Vector3.Distance(transform.position, player.transform.position) <= 1f)
+            float distance = Vector3.Distance(transform.position, player.transform.position);
+            if (distance <= 1f)
                 PlayerFail();
-                //Debug.Log("Player caught");
+            //Debug.Log("Player caught");
+
+            float volume = Mathf.Clamp( 1 - distance / 10, 0.5f, 1f);
+            AudioManager.Instance.SetSoundVolume(volume);
         }
         // Follow up 
     }
 
     private void PlayerFail()
     {
+        AudioManager.Instance.StopSound();
         Scene currentScene = SceneManager.GetActiveScene();
         SceneManager.LoadScene(currentScene.name);
     }

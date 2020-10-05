@@ -41,4 +41,14 @@ public class AudioManager : MonoBehaviour
         m_soundPlayer.PlayOneShot(clip);
     }
 
+    public void SetSoundVolume(float vol)
+    {
+        m_soundPlayer.volume = vol;
+    }
+
+    public void StopSound()
+    {
+        m_soundPlayer.Stop();
+    }
+
 }

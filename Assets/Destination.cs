@@ -11,7 +11,7 @@ public class Destination : MonoBehaviour
         {
             if (other.gameObject.transform.right == transform.right)
                 PlayerWin();
-                //
+
         }
     }
 
