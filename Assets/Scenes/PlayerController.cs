@@ -55,6 +55,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+
         if (Input.GetKeyDown(KeyCode.A)){
             TurnLeft();
         }
@@ -85,9 +86,10 @@ public class PlayerController : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.F) && mItemToPickup != null)
         {
+            Debug.Log(mItemToPickup.Name);
             inventory.AddItem(mItemToPickup);
             mItemToPickup.OnPickup();
-            Hud.CloseMessagePanel("");
+            //Hud.CloseMessagePanel("");
         }
         if (Input.GetKeyDown(KeyCode.X))
         {
@@ -183,9 +185,9 @@ public class PlayerController : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         IInventoryItem item = other.GetComponent<IInventoryItem>();
-        if (item != null)
+        //if (item != null)
         {
-            Hud.CloseMessagePanel("");
+           // Hud.CloseMessagePanel("");
             mItemToPickup = null;
         }
     }
