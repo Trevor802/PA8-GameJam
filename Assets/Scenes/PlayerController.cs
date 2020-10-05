@@ -35,6 +35,8 @@ public class PlayerController : MonoBehaviour
 
     private void Start() {
         AudioManager.Instance.PlayMusic();
+        if (inventory == null)
+            throw new System.Exception("Inventory is not set for player");
     }
 
 	public void ResetDirection(){
