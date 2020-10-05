@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3290862501319392651}
   - component: {fileID: 9017415271473352393}
   - component: {fileID: 6555665643565311070}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Bomb
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -188,10 +188,30 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 100
       objectReference: {fileID: 0}
+    - target: {fileID: -3957782524123411102, guid: 80623fd57bebe394ca5831af2f1e4454,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: -1500838157198093432, guid: 80623fd57bebe394ca5831af2f1e4454,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 80623fd57bebe394ca5831af2f1e4454,
         type: 3}
       propertyPath: m_Name
       value: Key
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 80623fd57bebe394ca5831af2f1e4454,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3779745573541866595, guid: 80623fd57bebe394ca5831af2f1e4454,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 80623fd57bebe394ca5831af2f1e4454, type: 3}

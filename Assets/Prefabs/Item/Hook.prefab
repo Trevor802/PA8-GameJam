@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1747061052333518751}
   - component: {fileID: 2568794850834612147}
   - component: {fileID: 5857721498702556666}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Hook
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -190,6 +190,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Magic
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 1ca63881348ae2446a45eda11c90b962,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4373755574485294491, guid: 1ca63881348ae2446a45eda11c90b962,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6562889748348933850, guid: 1ca63881348ae2446a45eda11c90b962,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6727007405964328823, guid: 1ca63881348ae2446a45eda11c90b962,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1ca63881348ae2446a45eda11c90b962, type: 3}
