@@ -27,7 +27,7 @@ public class Door : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F) && CollideWithPlayer)
+        if (CollideWithPlayer)
         {
             if (inventory.HasItem("Bomb"))
             {

@@ -96,7 +96,7 @@ public class PlayerController : MonoBehaviour
 			Move(vel);
         }
         
-        if (Input.GetKeyDown(KeyCode.F) && mItemToPickup != null)
+        if (mItemToPickup != null)
         {
             Debug.Log(mItemToPickup.Name);
             inventory.AddItem(mItemToPickup);
