@@ -29,6 +29,8 @@ public class PlayerController : MonoBehaviour
     private float m_turnCooldown = 0.5f;
     public bool canTurn{get; set;} = false;
     private Vector3 m_lastGroundNormal;
+
+    public AudioClip pickUp;
     private void Awake()
     {
 		ResetDirection();
@@ -38,6 +40,8 @@ public class PlayerController : MonoBehaviour
         AudioManager.Instance.PlayMusic();
         if (inventory == null)
             throw new System.Exception("Inventory is not set for player");
+        if (pickUp == null)
+            throw new System.Exception("Pickup audio clip is not set for player");
     }
 
 	public void ResetDirection(){

@@ -107,5 +107,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d8b23ba3a82bee4f9bab9a8fe2ca42d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  portal: {fileID: 8300000, guid: a806ce453a240ab418922b66323f1d7f, type: 3}
+  pickUp: {fileID: 8300000, guid: 9b97c86a8ade2144aad6c8f9011cdec5, type: 3}
   _Image: {fileID: 21300000, guid: 7b3fec23f6adfd04c953f34c0ce08035, type: 3}
   _IsUsed: 0

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Knife : MonoBehaviour, IInventoryItem
 {
+    public AudioClip portal;
+    public AudioClip pickUp;
 
     private bool IsPicked = false;
     private int timer = 3000;
@@ -38,10 +40,15 @@ public class Knife : MonoBehaviour, IInventoryItem
     public void OnPickup()
     {
         //TODO : add logic what happens when hook is picked up by player
-        gameObject.transform.position = new Vector3(1000.0f, 1350.0f, -1020.0f);
-        Collider collider = gameObject.GetComponent<Collider>();
-        collider.enabled = false;
-        IsPicked = true;
+        if(!IsPicked)
+        {
+            AudioManager.Instance.PlaySound(pickUp);
+            gameObject.transform.position = new Vector3(1000.0f, 1350.0f, -1020.0f);
+            Collider collider = gameObject.GetComponent<Collider>();
+            collider.enabled = false;
+            IsPicked = true;
+        }
+        
     }
 
     public void OnDrop()
@@ -59,6 +66,7 @@ public class Knife : MonoBehaviour, IInventoryItem
         if (!IsUsed)
         {
             _IsUsed = true;
+            AudioManager.Instance.PlaySound(portal);
            // gameObject.SetActive(false);
         }
     }
