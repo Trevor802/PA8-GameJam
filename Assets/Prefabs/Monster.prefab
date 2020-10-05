@@ -110,4 +110,4 @@ MonoBehaviour:
   speed: 5
   interval: 0.1
   monsterDelay: 2
-  monsterSFX: {fileID: 8300000, guid: 967ebf702b2799048955df306901a94f, type: 3}
+  monsterSFX: {fileID: 8300000, guid: 4d13c549dbad8de4aade41975fa4d4af, type: 3}
