@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     private IInventoryItem mItemToPickup = null;
 
     private Vector3 m_movingDir = Vector3.forward;
+    public Vector3 MovingDir => m_movingDir;
     private Vector3 m_gravityDir = Vector3.down;
 	[SerializeField]
 	private float m_movingSpeed = 10f;
@@ -32,7 +33,7 @@ public class PlayerController : MonoBehaviour
 		ResetDirection();
     }
 
-	private void ResetDirection(){
+	public void ResetDirection(){
 		m_movingDir = transform.forward;
 	}
 
@@ -116,12 +117,6 @@ public class PlayerController : MonoBehaviour
         var frontResult = CheckGround(_1, out frontHit);
         RaycastHit centerHit;
         var centerResult = CheckGround(transform.position, out centerHit);
-        // if (frontResult && centerResult && frontHit.normal == centerHit.normal){
-        //     var _3 = Vector3.Dot(transform.up, frontHit.normal);
-        //     if (!Utilities.FastApproximately(_3, 1, 0.01f)){
-        //         RotationAlignToGround(frontHit.normal);
-        //     }
-        // }
         if (frontResult){
             var groundNormal = frontHit.normal;
             var _2 = Vector3.Dot(m_movingDir, groundNormal);
