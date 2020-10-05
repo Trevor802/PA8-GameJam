@@ -29,7 +29,7 @@ public class Portal : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (Input.GetKeyDown(KeyCode.F) && inventory.HasItem("Hook"))
+        if (inventory.HasItem("Hook"))
         {
             if (!m_canUse)
                 return;
