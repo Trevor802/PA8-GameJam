@@ -69,6 +69,9 @@ public class PlayerController : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.R)){
             UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
         }
+        else if (Input.GetKeyDown(KeyCode.Escape)){
+            Application.Quit();
+        }
 		// Movement
         {
 			var vel = m_movingDir * m_movingSpeed;
