@@ -1338,6 +1338,11 @@ PrefabInstance:
       propertyPath: speed
       value: 20
       objectReference: {fileID: 0}
+    - target: {fileID: 6210714316005580393, guid: 19adf32f5cc196844886f9e9650862a1,
+        type: 3}
+      propertyPath: monsterSFX
+      value: 
+      objectReference: {fileID: 8300000, guid: 967ebf702b2799048955df306901a94f, type: 3}
     - target: {fileID: 6210714316005580398, guid: 19adf32f5cc196844886f9e9650862a1,
         type: 3}
       propertyPath: m_Name
