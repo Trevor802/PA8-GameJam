@@ -8,6 +8,8 @@ public class Bomb : MonoBehaviour, IInventoryItem
     private bool IsPicked = false;
     private int timer = 3000;
     private int timeCount = 0;
+    public AudioClip key;
+    public AudioClip pickUp;
     public string Name
     {
         get
@@ -37,10 +39,15 @@ public class Bomb : MonoBehaviour, IInventoryItem
     public void OnPickup()
     {
         //TODO : add logic what happens when hook is picked up by player
-        Collider collider = gameObject.GetComponent<Collider>();
-        collider.enabled = false;
-        gameObject.GetComponent<Renderer>().enabled = false;
-        IsPicked = true;
+        if(!IsPicked)
+        {
+            AudioManager.Instance.PlaySound(pickUp);
+            Collider collider = gameObject.GetComponent<Collider>();
+            collider.enabled = false;
+            gameObject.GetComponent<Renderer>().enabled = false;
+            IsPicked = true;
+        }
+        
     }
         public void OnDrop()
     {
@@ -56,6 +63,7 @@ public class Bomb : MonoBehaviour, IInventoryItem
         if (!IsUsed)
         {
             _IsUsed = true;
+            AudioManager.Instance.PlaySound(key);
             //gameObject.SetActive(false);
         }
     }

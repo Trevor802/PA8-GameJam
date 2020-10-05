@@ -106,5 +106,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65a1606caedb5d54a99b7433198a95cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  key: {fileID: 8300000, guid: 0eae69b90812c1a448329ae7bcac7aa9, type: 3}
+  pickUp: {fileID: 8300000, guid: 9b97c86a8ade2144aad6c8f9011cdec5, type: 3}
   _Image: {fileID: 21300000, guid: e2d18b1adbdc11444bc5816aa700e581, type: 3}
   _IsUsed: 0

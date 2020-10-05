@@ -210,6 +210,7 @@ MonoBehaviour:
   Hud: {fileID: 7581819983126278075, guid: df03524277ac2e74e8514c3a16ea8f4e, type: 3}
   m_movingSpeed: 10
   m_jumpHeight: 2
+  pickUp: {fileID: 8300000, guid: 9b97c86a8ade2144aad6c8f9011cdec5, type: 3}
 --- !u!136 &784191295853901705
 CapsuleCollider:
   m_ObjectHideFlags: 0
