@@ -28,6 +28,7 @@ public class PlayerController : MonoBehaviour
     private bool isGrounded{get; set;} = false;
     private float m_turnCooldown = 0.5f;
     public bool canTurn{get; set;} = false;
+    private Vector3 m_lastGroundNormal;
     private void Awake()
     {
 		ResetDirection();
@@ -46,6 +47,7 @@ public class PlayerController : MonoBehaviour
             return;
         }
 		m_movingDir = Vector3.Cross(m_movingDir, transform.up);
+        // transform.rotation = Quaternion.LookRotation(m_movingDir, transform.up);
 		OnTurnLeft?.Invoke(m_movingDir);
     }
 
@@ -54,6 +56,7 @@ public class PlayerController : MonoBehaviour
             return;
         }
 		m_movingDir = Vector3.Cross(transform.up, m_movingDir);
+        // transform.rotation = Quaternion.LookRotation(m_movingDir, transform.up);
 		OnTurnRight?.Invoke(m_movingDir);
     }
 
@@ -111,7 +114,7 @@ public class PlayerController : MonoBehaviour
 
     private bool CheckGround(Vector3 origin, out RaycastHit hit, float extraDepth = 0.5f){
         var dist = GetComponent<CapsuleCollider>().height / 2f + extraDepth;
-        var result = Physics.Raycast(origin, -transform.up, out hit, dist);
+        var result = Physics.Raycast(origin, -transform.up, out hit, dist, LayerMask.GetMask("Soft", "Hard"));
         return result;
     }
 
@@ -120,10 +123,11 @@ public class PlayerController : MonoBehaviour
         var _1 = transform.position + m_movingDir * Time.deltaTime;
         // var _1 = GetFrontPoint();
         var frontResult = CheckGround(_1, out frontHit);
-        RaycastHit centerHit;
-        var centerResult = CheckGround(transform.position, out centerHit);
+        // RaycastHit centerHit;
+        // var centerResult = CheckGround(transform.position, out centerHit);
         if (frontResult){
             var groundNormal = frontHit.normal;
+            /*
             var _2 = Vector3.Dot(m_movingDir, groundNormal);
             // Floor
             if (Utilities.FastApproximately(_2, 0, 0.15f)){
@@ -144,6 +148,21 @@ public class PlayerController : MonoBehaviour
                     VelocityAlignToGround(groundNormal);
                 else
                     RotationAlignToGround(groundNormal);
+            }
+            */
+            var layerName = LayerMask.LayerToName(frontHit.transform.gameObject.layer);
+            if (layerName == "Hard"){
+                VelocityAlignToGround(groundNormal);
+            }
+            else if (layerName == "Soft"){
+                var _2 = Vector3.Dot(m_lastGroundNormal, groundNormal);
+                if (!Utilities.FastApproximately(_2, 1f, 0.0001f)){
+                    RotationAlignToGround(groundNormal);
+                    m_lastGroundNormal = groundNormal;
+                }
+            }
+            else{
+
             }
         }
     }

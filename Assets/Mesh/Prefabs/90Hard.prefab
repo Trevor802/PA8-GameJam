@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 547307667595545434}
   - component: {fileID: 648228079817789537}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: 90Hard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -57,7 +57,7 @@ GameObject:
   - component: {fileID: 1188443559451213039}
   - component: {fileID: 831640327504976966}
   - component: {fileID: 8433649784726359597}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: pasted__pCube7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
