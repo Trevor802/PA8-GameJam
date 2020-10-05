@@ -118,6 +118,7 @@ public class PlayerController : MonoBehaviour
     private void SlopeDetection(){
         RaycastHit frontHit;
         var _1 = transform.position + m_movingDir * Time.deltaTime;
+        // var _1 = GetFrontPoint();
         var frontResult = CheckGround(_1, out frontHit);
         RaycastHit centerHit;
         var centerResult = CheckGround(transform.position, out centerHit);
@@ -125,13 +126,13 @@ public class PlayerController : MonoBehaviour
             var groundNormal = frontHit.normal;
             var _2 = Vector3.Dot(m_movingDir, groundNormal);
             // Floor
-            if (Utilities.FastApproximately(_2, 0, 0.01f)){
+            if (Utilities.FastApproximately(_2, 0, 0.15f)){
                 return;
             }
             // Incoming Upslope
             else if (_2 < 0){
                 // TODO: 1 frame freeze
-                if (_2 < -0.7)
+                if (_2 < -0.5)
                     VelocityAlignToGround(groundNormal);
                 else
                     RotationAlignToGround(groundNormal);
@@ -139,7 +140,7 @@ public class PlayerController : MonoBehaviour
             // Incoming Downslope
             else if(_2 > 0){
                 // TODO: Need attach
-                if (_2 > 0.7)
+                if (_2 > 0.5)
                     VelocityAlignToGround(groundNormal);
                 else
                     RotationAlignToGround(groundNormal);
